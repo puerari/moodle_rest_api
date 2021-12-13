@@ -1,0 +1,28 @@
+{
+  "name": "puerari/moodle_rest_api",
+  "description": "MOODLE_REST_API is a PHP package that abstracts the interaction with Moodle through its REST API",
+  "keywords": [
+    "Puerari",
+    "Moodle",
+    "API",
+    "REST"
+  ],
+  "homepage": "https://www.linkedin.com/in/leandropuerari",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Leandro Puerari",
+      "email": "leandro@puerari.com.br"
+    }
+  ],
+  "require": {
+    "php": "^7.1",
+    "ext-curl": "*",
+    "ext-mbstring": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Puerari\\Moodle\\": "src"
+    }
+  }
+}
