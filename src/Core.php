@@ -15,7 +15,7 @@ trait Core
      * @return bool|string
      * @throws MraException
      */
-    public function getCoursesByField(string $field, string $value)
+    public function getCoursesByField(/*string*/ $field, /*string*/ $value)
     {
         $validFields = ['', 'id', 'ids', 'shortname', 'idnumber', 'category'];
         if (!in_array($field, $validFields)) {
