@@ -10,19 +10,24 @@ namespace Puerari\Moodle;
 class MoodleRestApi
 {
     /** Constant that defines return format to JSON */
-    /*public*/ const RETURN_JSON = 'json';
+    /*public*/
+    const RETURN_JSON = 'json';
 
     /** Constant that defines return format to XML */
-    /*public*/ const RETURN_XML = 'xml';
+    /*public*/
+    const RETURN_XML = 'xml';
 
     /** Constant that defines return format to ARRAY */
-    /*public*/ const RETURN_ARRAY = 'array';
+    /*public*/
+    const RETURN_ARRAY = 'array';
 
     /** Constant that defines return format to ARRAY */
-    /*public*/ const METHOD_GET = 'get';
+    /*public*/
+    const METHOD_GET = 'get';
 
     /** Constant that defines return format to ARRAY */
-    /*public*/ const METHOD_POST = 'post';
+    /*public*/
+    const METHOD_POST = 'post';
 
     /** @var string Access Token */
     private $access_token;
@@ -50,7 +55,7 @@ class MoodleRestApi
      * @param bool $ssl_verify
      * @throws MraException
      */
-    public function __construct(/*string*/ $server_url, /*string*/ $access_token, /*string*/ $return_format = MoodleRestApi::RETURN_JSON, /*bool*/ $ssl_verify = false)
+    public function __construct(/*string*/ $server_url, /*string*/ $access_token, /*string*/ $return_format = MoodleRestApi::RETURN_ARRAY, /*bool*/ $ssl_verify = false)
     {
         if (!filter_var($server_url, FILTER_VALIDATE_URL))
             throw new MraException('Invalid URL!');
@@ -136,8 +141,9 @@ class MoodleRestApi
      */
     public function setReturnFormat(/*string*/ $return_format)/*: MoodleRestApi*/
     {
-        if ($return_format != self::RETURN_JSON && $return_format != self::RETURN_XML && $return_format != self::RETURN_ARRAY) {
-            throw new MraException("Invalid return format: '$return_format'.");
+        $valid_formats = [self::RETURN_XML, self::RETURN_JSON, self::RETURN_ARRAY];
+        if (!in_array($return_format, $valid_formats)) {
+            throw new MraException("Invalid return format: '$return_format'. Valid formats: " . implode(', ', $valid_formats));
         }
         $this->return_format = $return_format;
         return $this;
@@ -160,7 +166,11 @@ class MoodleRestApi
     protected function execGetCurl()
     {
         $this->data['wstoken'] = $this->access_token;
-        $this->data['moodlewsrestformat'] = $this->return_format;
+        if ($this->return_format == self::RETURN_ARRAY) {
+            $this->data['moodlewsrestformat'] = self::RETURN_JSON;
+        } else {
+            $this->data['moodlewsrestformat'] = $this->return_format;
+        }
         $url = $this->server_url . '?' . http_build_query($this->data);
 
         $ch = curl_init();
@@ -171,6 +181,9 @@ class MoodleRestApi
         $response = curl_exec($ch);
         curl_close($ch);
 
+        if ($this->return_format == self::RETURN_ARRAY) {
+            $response = json_decode($response);
+        }
         return $response;
     }
 
