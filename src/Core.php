@@ -12,7 +12,7 @@ trait Core
     /**
      * @param string $field
      * @param string $value
-     * @return bool|string
+     * @return array|string
      * @throws MraException
      */
     public function getCoursesByField(/*string*/ $field, /*string*/ $value)
