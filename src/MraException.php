@@ -3,7 +3,7 @@
 namespace Puerari\Moodle;
 
 use Exception;
-use Throwable;
+/*use Throwable;*/
 
 /**
  * @class MraException
@@ -12,9 +12,9 @@ use Throwable;
  */
 class MraException extends Exception
 {
-    public function __construct($message, $code = 0, Throwable $previous = null)
+    public function __construct($message, $code = 0/*, Throwable $previous = null*/)
     {
-        parent::__construct('MoodleRestApi: ' . $message, $code, $previous);
+        parent::__construct('MoodleRestApi: ' . $message, $code/*, $previous*/);
     }
 
     public function __toString() {

@@ -161,9 +161,58 @@ class MoodleRestApi
     }
 
     /**
-     * @return bool|string
+     * @return array|string
+     * @throws MraException
      */
     protected function execGetCurl()
+    {
+        $this->config();
+        $url = $this->server_url . '?' . http_build_query($this->data);
+        try {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->ssl_verify);
+            $response = curl_exec($ch);
+            curl_close($ch);
+        } catch (\Exception $exception) {
+            throw new MraException($exception->getMessage(), $exception->getCode());
+        }
+        return $this->formattedReturn($response);
+    }
+
+    /**
+     * @return array|string
+     * @throws MraException
+     */
+    protected function execPostCurl()
+    {
+        $this->config();
+        $params['wstoken'] = $this->data['wstoken'];
+        $params['moodlewsrestformat'] = $this->data['moodlewsrestformat'];
+        $params['wsfunction'] = $this->data['wsfunction'];
+        $url = $this->server_url . '?' . http_build_query($params);
+        unset($this->data['wstoken'], $this->data['moodlewsrestformat'], $this->data['wsfunction']);
+
+        try {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->ssl_verify);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->data));
+            curl_setopt($ch, CURLOPT_POST, 1);
+            $response = curl_exec($ch);
+            curl_close($ch);
+        } catch (\Exception $exception) {
+            throw new MraException($exception->getMessage(), $exception->getCode());
+        }
+
+        return $this->formattedReturn($response);
+    }
+
+    private function config()/*: void*/
     {
         $this->data['wstoken'] = $this->access_token;
         if ($this->return_format == self::RETURN_ARRAY) {
@@ -171,43 +220,17 @@ class MoodleRestApi
         } else {
             $this->data['moodlewsrestformat'] = $this->return_format;
         }
-        $url = $this->server_url . '?' . http_build_query($this->data);
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->ssl_verify);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        if ($this->return_format == self::RETURN_ARRAY) {
-            $response = json_decode($response);
-        }
-        return $response;
     }
 
     /**
-     * @return bool|string
+     * @param $response
+     * @return array|string
      */
-    protected function execPostCurl()
+    private function formattedReturn(/*string*/ $response)/*: array*/
     {
-        $params['wstoken'] = $this->access_token;
-        $params['moodlewsrestformat'] = $this->return_format;
-        $params['wsfunction'] = $this->data['wsfunction'];
-        $url = $this->server_url . '?' . http_build_query($params);
-        unset($this->data['wstoken'], $this->data['moodlewsrestformat'], $this->data['wsfunction']);
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->ssl_verify);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->data));
-        curl_setopt($ch, CURLOPT_POST, 1);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
+        if ($this->return_format == self::RETURN_ARRAY) {
+            $response = json_decode($response, true);
+        }
         return $response;
     }
 }
