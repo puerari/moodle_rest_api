@@ -48,4 +48,5 @@ O PHPCompatibility é estático e não detecta problemas que dependem dos dados 
 ## Armadilhas
 
 - O construtor remove a barra final da URL base e anexa `/webservice/rest/server.php`. `setServerUrl()` **não** faz isso: grava a URL exatamente como recebida.
-- Há resquícios do projeto irmão `cwp_api` que não são referências reais: `@package Puerari\Cwp` no docblock de `Core.php`, `$cwpApi` no exemplo do README e o link para `puerari/cwp_api` no CONTRIBUTING.md.
+- Há resquícios do projeto irmão `cwp_api` que não são referências reais: `@package Puerari\Cwp` no docblock de `Core.php` e o link para `puerari/cwp_api` no CONTRIBUTING.md.
+- O README documenta os métodos, os formatos de retorno e o tratamento de erros. Ao criar ou mudar um método público, atualize a tabela "Methods".
