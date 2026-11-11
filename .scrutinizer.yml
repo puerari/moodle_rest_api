@@ -1,0 +1,16 @@
+# O Scrutinizer só faz a análise de qualidade do src/ (selos "Build" e "Quality Score" do README).
+# Os testes rodam no GitHub Actions (.github/workflows/tests.yml), do PHP 5.6 ao 8.5.
+filter:
+    paths: ['src/*']
+
+build:
+    nodes:
+        analysis:
+            # O src/ não tem dependências. Pular o composer install evita depender do Composer
+            # da imagem do Scrutinizer, que pode ser antigo demais para o Packagist atual.
+            dependencies:
+                override:
+                    - echo "src/ não tem dependências"
+            tests:
+                override:
+                    - php-scrutinizer-run
