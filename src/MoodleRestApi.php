@@ -175,7 +175,8 @@ class MoodleRestApi
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->ssl_verify);
             $response = curl_exec($ch);
-            curl_close($ch);
+            // curl_close() é no-op desde o PHP 8.0 e deprecated no 8.5; unset() libera o handle em qualquer versão.
+            unset($ch);
         } catch (\Exception $exception) {
             throw new MraException($exception->getMessage(), $exception->getCode());
         }
@@ -204,7 +205,8 @@ class MoodleRestApi
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->data));
             curl_setopt($ch, CURLOPT_POST, 1);
             $response = curl_exec($ch);
-            curl_close($ch);
+            // curl_close() é no-op desde o PHP 8.0 e deprecated no 8.5; unset() libera o handle em qualquer versão.
+            unset($ch);
         } catch (\Exception $exception) {
             throw new MraException($exception->getMessage(), $exception->getCode());
         }

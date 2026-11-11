@@ -26,6 +26,7 @@ O Moodle é o sistema de gestão da aprendizagem mais popular do mundo. Comece a
 - Easy to set up (Fácil de configurar)
 - Composer ready (Pronto para o composer)
 - PSR-2 compliant (Compatível com PSR-2)
+- PHP 5.6 to 8.5 (PHP 5.6 a 8.5), with ext-curl, ext-mbstring and ext-json
 
 ## Installation
 
