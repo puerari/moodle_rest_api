@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sem atributos específicos de versão: o mesmo arquivo serve do PHPUnit 5.7 ao 13. -->
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="moodle_rest_api">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

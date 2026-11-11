@@ -71,8 +71,14 @@ trait Core
         $students = $this->getEnrolledUsers($course_id, $options);
         $this->setReturnFormat($oldReturnFormat);
         $studentsToReturn = [];
+        // Falha do cURL (null) ou erro do Moodle (array com 'exception', 'errorcode' e 'message')
+        // não são listas de usuários: no PHP 8+ acessar $student['roles'] em uma string lança TypeError.
+        if (!is_array($students)) {
+            return $studentsToReturn;
+        }
         foreach ($students as $student) {
-            if (is_array($student['roles'])) {
+            // 'roles' é opcional na resposta do Moodle.
+            if (is_array($student) && isset($student['roles']) && is_array($student['roles'])) {
                 foreach ($student['roles'] as $role) {
                     if ($role['shortname'] == 'student') {
                         $studentsToReturn[] = $student;

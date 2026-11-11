@@ -16,14 +16,50 @@
     }
   ],
   "require": {
-    "php": "^5.6",
+    "php": "^5.6 || ^7.0 || ^8.0",
     "ext-curl": "*",
     "ext-mbstring": "*",
     "ext-json": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7 || ^6.5 || ^7.5 || ^8.5 || ^9.6 || ^10.5 || ^11.5 || ^12.5 || ^13.4"
   },
   "autoload": {
     "psr-4": {
       "Puerari\\Moodle\\": "src"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Puerari\\Moodle\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "test:matrix": [
+      "Composer\\Config::disableProcessTimeout",
+      "sh tests/matrix.sh"
+    ],
+    "tools": "@composer install --working-dir=tools --no-interaction --quiet",
+    "compat": [
+      "@tools",
+      "tools/vendor/bin/phpcs"
+    ],
+    "rector": [
+      "@tools",
+      "tools/vendor/bin/rector process --dry-run"
+    ],
+    "rector:fix": [
+      "@tools",
+      "tools/vendor/bin/rector process"
+    ]
+  },
+  "scripts-descriptions": {
+    "test": "Roda os testes no PHP local.",
+    "test:matrix": "Roda os testes em containers Docker do PHP 5.6 ao 8.5 (aceita versões como argumento).",
+    "tools": "Instala as ferramentas de migração em tools/ (exige PHP 7.4+).",
+    "compat": "Verifica compatibilidade com PHP 5.6+ (PHPCompatibility, ver phpcs.xml.dist).",
+    "rector": "Mostra as migrações do Rector sem aplicar (alvo: PHP mínimo do composer.json).",
+    "rector:fix": "Aplica as migrações do Rector."
   }
 }
