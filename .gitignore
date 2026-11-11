@@ -3,3 +3,7 @@
 /composer.lock
 /package-lock.json
 .idea
+/tools/vendor
+/tools/composer.lock
+.phpunit.result.cache
+/.phpunit.cache
